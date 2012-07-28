@@ -8,29 +8,70 @@
 
 #import "AppDelegate.h"
 
+#define SAFARIID @"com.apple.Safari"
+#define CHROMEID @"com.google.Chrome"
+
+#define TWEETBOT_MENTIONS @"tweetbot://mentions"
+#define TWEETBOT_MESSAGES @"tweetbot://messages"
+
+#define TWITTER_MENTIONS @"twitter://mentions"
+#define TWITTER_MESSAGES @"twitter://messages"
+
 @implementation AppDelegate
+
+- (void)preferredBrowser
+{
+    CFStringRef preferred = LSCopyDefaultHandlerForURLScheme(CFSTR("http"));
+    NSLog(@"%@", (__bridge NSString*)preferred);
+}
+
+- (void)listAvailableBrowsers
+{
+    NSURL* url = [NSURL URLWithString:@"http://www.apple.com"];
+    CFArrayRef apps = LSCopyApplicationURLsForURL((__bridge CFURLRef)url, kLSRolesAll);
+    
+    NSLog(@"apps: %@", (__bridge NSArray*)apps);
+}
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-    // Insert code here to initialize your application
+    [self preferredBrowser];
+    [self listAvailableBrowsers];
+    
+    NSString *bundleID = [[NSBundle mainBundle] bundleIdentifier];
+    OSStatus httpResult = LSSetDefaultHandlerForURLScheme((CFStringRef)@"http", (__bridge CFStringRef)bundleID);
+    OSStatus httpsResult = LSSetDefaultHandlerForURLScheme((CFStringRef)@"https", (__bridge CFStringRef)bundleID);
+    
+    [self.window makeKeyAndOrderFront:nil];
+}
+
+-(void)openURLString:(NSString*)urlString
+{
+    NSURL* url = [NSURL URLWithString:urlString];
+    [[NSWorkspace sharedWorkspace] openURLs:[NSArray arrayWithObject:url]
+                    withAppBundleIdentifier:SAFARIID
+                                    options:NSWorkspaceLaunchAsync
+             additionalEventParamDescriptor:nil
+                          launchIdentifiers:NULL];
+    
+    [[NSApplication sharedApplication] terminate:self];
 }
 
 - (void)handleGetURLEvent:(NSAppleEventDescriptor *)event withReplyEvent:(NSAppleEventDescriptor *)replyEvent
 {
     NSString *urlAsString = [[event paramDescriptorForKeyword:keyDirectObject] stringValue];
-    NSLog(@"urlstring: %@", urlAsString);
     
     if([urlAsString isEqualToString:@"https://twitter.com/mentions"])
     {
-        NSURL* twitterURL = [NSURL URLWithString:@"tweetbot://mentions"];
+        NSURL* twitterURL = [NSURL URLWithString:@"twitter://mentions"];
         [[NSWorkspace sharedWorkspace] openURL:twitterURL];
 
     } else if([urlAsString isEqualToString:@"https://twitter.com/messages"]){
-        NSURL* twitterURL = [NSURL URLWithString:@"tweetbot://mentions"];
+        NSURL* twitterURL = [NSURL URLWithString:@"twitter://messages"];
         [[NSWorkspace sharedWorkspace] openURL:twitterURL];
         
     } else {
-        NSLog(@"open with chrome or safari");
+        [self openURLString:urlAsString];
     }
     
     [[NSApplication sharedApplication] terminate:self];
