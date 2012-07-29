@@ -13,6 +13,7 @@
 		C9800C8315C220820047154F /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = C9800C8115C220820047154F /* Credits.rtf */; };
 		C9800C8615C220820047154F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C9800C8515C220820047154F /* AppDelegate.m */; };
 		C9800C8915C220820047154F /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9800C8715C220820047154F /* MainMenu.xib */; };
+		C9E43B9315C4D2BC00EE7319 /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = C9E43B9215C4D2BC00EE7319 /* icon.icns */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,7 @@
 		C9800C8415C220820047154F /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		C9800C8515C220820047154F /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		C9800C8815C220820047154F /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		C9E43B9215C4D2BC00EE7319 /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icon.icns; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -46,6 +48,7 @@
 		C9800C6315C220820047154F = {
 			isa = PBXGroup;
 			children = (
+				C9E43B9215C4D2BC00EE7319 /* icon.icns */,
 				C9800C7815C220820047154F /* Interception */,
 				C9800C7115C220820047154F /* Frameworks */,
 				C9800C6F15C220820047154F /* Products */,
@@ -156,6 +159,7 @@
 				C9800C7D15C220820047154F /* InfoPlist.strings in Resources */,
 				C9800C8315C220820047154F /* Credits.rtf in Resources */,
 				C9800C8915C220820047154F /* MainMenu.xib in Resources */,
+				C9E43B9315C4D2BC00EE7319 /* icon.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -237,6 +241,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Developer ID Application: Matthew Morris";
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -246,6 +251,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				PROVISIONING_PROFILE = "";
 				SDKROOT = macosx;
 			};
 			name = Release;
@@ -293,6 +299,7 @@
 				C9800C8E15C220820047154F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

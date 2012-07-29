@@ -12,4 +12,14 @@
 
 @property (assign) IBOutlet NSWindow *window;
 
+@property (nonatomic, strong) NSMutableDictionary* appNameToURL;
+@property (nonatomic, strong) NSMutableDictionary* twitterNameToURL;
+
+@property (weak) IBOutlet NSPopUpButton *twitterDropdown;
+@property (weak) IBOutlet NSPopUpButton *browserDropdown;
+@property (weak) IBOutlet NSButton *cancelButton;
+@property (weak) IBOutlet NSButton *okayButton;
+- (IBAction)okayClicked:(id)sender;
+- (IBAction)cancelClicked:(id)sender;
+
 @end
