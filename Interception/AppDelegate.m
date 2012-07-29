@@ -109,11 +109,14 @@
     }
     
     [self.window makeKeyAndOrderFront:nil];
-
-    // wow, i can't believe this still works.
-    ProcessSerialNumber psn;
-    OSErr ret = GetProcessForPID(pID, &psn);
-    ret = SetFrontProcess(&psn);
+    
+    {
+        // if we've gotten this far, let's go ahead and show a dock icon.
+        
+        ProcessSerialNumber psn = { 0, kCurrentProcess };
+        TransformProcessType(&psn, kProcessTransformToForegroundApplication);
+        SetFrontProcess(&psn);
+    }
 }
 
 -(void)openURLString:(NSString*)urlString
