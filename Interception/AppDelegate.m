@@ -108,18 +108,12 @@
         [self.twitterDropdown addItemsWithTitles:self.twitterNameToURL.allKeys];
     }
     
-    //[self openTwitterForURL:@"foo"];
-    
     [self.window makeKeyAndOrderFront:nil];
-    
-#if 0
-    // older test code...
-    NSString *bundleID = [[NSBundle mainBundle] bundleIdentifier];
-    OSStatus httpResult = LSSetDefaultHandlerForURLScheme((CFStringRef)@"http", (__bridge CFStringRef)bundleID);
-    OSStatus httpsResult = LSSetDefaultHandlerForURLScheme((CFStringRef)@"https", (__bridge CFStringRef)bundleID);
-    
-    [self.window makeKeyAndOrderFront:nil];
-#endif
+
+    // wow, i can't believe this still works.
+    ProcessSerialNumber psn;
+    OSErr ret = GetProcessForPID(pID, &psn);
+    ret = SetFrontProcess(&psn);
 }
 
 -(void)openURLString:(NSString*)urlString
