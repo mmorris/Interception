@@ -63,8 +63,6 @@
     NSURL* url = [NSURL URLWithString:@"http://www.apple.com"];
     CFArrayRef apps = LSCopyApplicationURLsForURL((__bridge CFURLRef)url, kLSRolesAll);
     
-    NSLog(@"apps: %@", (__bridge NSArray*)apps);
-    
     NSArray* ret = [NSArray arrayWithArray:(__bridge NSArray*)apps];
     
     return ret;
@@ -109,11 +107,9 @@
     {// set twitter dropdown
         self.twitterNameToURL = [NSMutableDictionary dictionary];
         for(NSURL* bundleURL in availTwitterClients) {
-            NSLog(@"%@", bundleURL);
             NSBundle* appBundle = [NSBundle bundleWithURL:bundleURL];
             
             NSString* appName = [[appBundle infoDictionary] objectForKey:@"CFBundleName"];
-            NSLog(@"app name: %@", appName);
             
             [self.twitterNameToURL setObject:bundleURL forKey:appName];
         }
@@ -139,7 +135,6 @@
 {
     NSString* browserURLString = [[NSUserDefaults standardUserDefaults] objectForKey:@"preferred_browser"];
     NSURL* browserURL = [NSURL URLWithString:browserURLString];
-    NSLog(@"def browser: %@", browserURL);
     
     NSBundle* browserBundle = [NSBundle bundleWithURL:browserURL];
     NSString* browserID = [browserBundle bundleIdentifier];
@@ -160,7 +155,6 @@
     
     NSString* twitterURLString = [[NSUserDefaults standardUserDefaults] objectForKey:@"preferred_twitter"];
     NSURL* twitterURL = [NSURL URLWithString:twitterURLString];
-    NSLog(@"def twitter: %@", twitterURL);
     
     [[NSWorkspace sharedWorkspace] launchApplicationAtURL:twitterURL
                                                   options:NSWorkspaceLaunchAsync
@@ -171,8 +165,6 @@
 - (void)handleGetURLEvent:(NSAppleEventDescriptor *)event withReplyEvent:(NSAppleEventDescriptor *)replyEvent
 {
     NSString *urlAsString = [[event paramDescriptorForKeyword:keyDirectObject] stringValue];
-    
-    NSLog(@"URL: %@", urlAsString);
     
     if([urlAsString isEqualToString:@"https://twitter.com/mentions"])
     {
@@ -192,37 +184,34 @@
     [[NSApplication sharedApplication] terminate:self];
 }
 
--(void)applicationWillFinishLaunching:(NSNotification *)aNotification {
-    NSLog(@"1");
+-(void)applicationWillFinishLaunching:(NSNotification *)aNotification
+{
     NSAppleEventManager *appleEventManager = [NSAppleEventManager sharedAppleEventManager];
     [appleEventManager setEventHandler:self
                            andSelector:@selector(handleGetURLEvent:withReplyEvent:)
                          forEventClass:kInternetEventClass andEventID:kAEGetURL];
     
     
-    NSString* browserURLString = [[NSUserDefaults standardUserDefaults] objectForKey:@"preferred_browser"];
-    NSURL* browserURL = [NSURL URLWithString:browserURLString];
-    NSLog(@"def browser: %@", browserURL);
-    
-    NSString* twitterURLString = [[NSUserDefaults standardUserDefaults] objectForKey:@"preferred_twitter"];
-    NSURL* twitterURL = [NSURL URLWithString:twitterURLString];
-    NSLog(@"def twitter: %@", twitterURL);
+//    NSString* browserURLString = [[NSUserDefaults standardUserDefaults] objectForKey:@"preferred_browser"];
+//    NSURL* browserURL = [NSURL URLWithString:browserURLString];
+//    NSLog(@"def browser: %@", browserURL);
+//    
+//    NSString* twitterURLString = [[NSUserDefaults standardUserDefaults] objectForKey:@"preferred_twitter"];
+//    NSURL* twitterURL = [NSURL URLWithString:twitterURLString];
+//    NSLog(@"def twitter: %@", twitterURL);
 }
 
-- (IBAction)okayClicked:(id)sender {
-    NSLog(@"okayClicked");
-    
-    NSLog(@"%@", self.browserDropdown.selectedItem.title);
-    
+- (IBAction)okayClicked:(id)sender
+{
     // map title back to bundle id
     NSURL* browserURL = [self.appNameToURL objectForKey:self.browserDropdown.selectedItem.title];
-    NSLog(@"setting: %@", browserURL);
+
     // set the default browser for everything else.
     [[NSUserDefaults standardUserDefaults] setObject:[browserURL absoluteString] forKey:@"preferred_browser"];
     
     
     NSURL* twitterAppURL = [self.twitterNameToURL objectForKey:self.twitterDropdown.selectedItem.title];
-    NSLog(@"setting: %@", twitterAppURL);
+
     // set the default browser for everything else.
     [[NSUserDefaults standardUserDefaults] setObject:[twitterAppURL absoluteString] forKey:@"preferred_twitter"];
     
@@ -237,9 +226,8 @@
     [[NSApplication sharedApplication] terminate:self];
 }
 
-- (IBAction)cancelClicked:(id)sender {
-    NSLog(@"cancelClicked");
-    
+- (IBAction)cancelClicked:(id)sender
+{
     [[NSApplication sharedApplication] terminate:self];
 }
 @end
