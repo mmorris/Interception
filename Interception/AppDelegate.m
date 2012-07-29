@@ -122,7 +122,9 @@
         [self.twitterDropdown addItemsWithTitles:self.twitterNameToURL.allKeys];
     }
     
+    [self.window center];
     [self.window makeKeyAndOrderFront:nil];
+    
     
     {
         // if we've gotten this far, let's go ahead and show a dock icon.
