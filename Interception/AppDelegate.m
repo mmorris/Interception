@@ -74,22 +74,36 @@
 {
     NSArray* availBrowsers = [self listAvailableBrowsers];
     NSArray* availTwitterClients = [self listAvailableTwitterClients];
-    NSLog(@"tc: %@", availTwitterClients);
 
     {// set http dropdown
+        
+        NSString* preferredBrowserID = [self preferredBrowser];
+        NSString* preferredBrowserName = nil;
+        
         self.appNameToURL = [NSMutableDictionary dictionary];
         for(NSURL* bundleURL in availBrowsers) {
-            NSLog(@"%@", bundleURL);
             NSBundle* appBundle = [NSBundle bundleWithURL:bundleURL];
             
+            if([appBundle.bundleIdentifier isEqualToString:@"com.mattmorris.Interception"]) {
+                continue;
+            }
+            
             NSString* appName = [[appBundle infoDictionary] objectForKey:@"CFBundleName"];
-            NSLog(@"app name: %@", appName);
+            if([preferredBrowserID caseInsensitiveCompare:appBundle.bundleIdentifier] == NSOrderedSame) {
+                preferredBrowserName = appName;
+            }
             
             [self.appNameToURL setObject:bundleURL forKey:appName];
         }
         
+        NSMutableArray* names = [NSMutableArray arrayWithArray:self.appNameToURL.allKeys];
+        NSUInteger preferredIndex = [names indexOfObject:preferredBrowserName];
+        if(preferredIndex != NSNotFound) {
+            [names exchangeObjectAtIndex:0 withObjectAtIndex:preferredIndex];
+        }
+        
         [self.browserDropdown removeAllItems];
-        [self.browserDropdown addItemsWithTitles:self.appNameToURL.allKeys];
+        [self.browserDropdown addItemsWithTitles:names];
     }
     
     {// set twitter dropdown
