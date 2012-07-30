@@ -45,13 +45,16 @@
 {
     NSArray* twitterClientIDs = @[@"com.tapbots.TweetbotMacAdHoc",
                                   @"com.violasong.Hibari",
-                                  @"com.twitter.twitter-mac"];
+                                  @"com.twitter.twitter-mac",
+                                  @"com.twitter.TweetDeck"];
     
     NSMutableArray* URLs = [NSMutableArray array];
     
     for(NSString* appId in twitterClientIDs) {
         NSURL* appURL = [[NSWorkspace sharedWorkspace] URLForApplicationWithBundleIdentifier:appId];
-        [URLs addObject:appURL];
+        if(appURL != nil) {
+            [URLs addObject:appURL];
+        }
     }
     
     return URLs;
