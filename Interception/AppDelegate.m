@@ -81,40 +81,19 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-    NSArray* availBrowsers = [self listAvailableBrowsers];
     NSArray* availTwitterClients = [self listAvailableTwitterClients];
-
-    {// set http dropdown
-        
-        NSString* preferredBrowserID = [self preferredBrowser];
-        NSString* preferredBrowserName = nil;
-        
-        self.appNameToURL = [NSMutableDictionary dictionary];
-        for(NSURL* bundleURL in availBrowsers) {
-            NSBundle* appBundle = [NSBundle bundleWithURL:bundleURL];
-            
-            if([appBundle.bundleIdentifier isEqualToString:@"com.mattmorris.Interception"]) {
-                continue;
-            }
-            
-            NSString* appName = [[appBundle infoDictionary] objectForKey:@"CFBundleName"];
-            if([preferredBrowserID caseInsensitiveCompare:appBundle.bundleIdentifier] == NSOrderedSame) {
-                preferredBrowserName = appName;
-            }
-            
-            [self.appNameToURL setObject:bundleURL forKey:appName];
+    
+    NSString* preferredTwitterID = nil;
+    {
+        NSString* twitterURLString = [[NSUserDefaults standardUserDefaults] objectForKey:@"preferred_twitter"];
+        if(twitterURLString) {
+            NSURL* twitterURL = [NSURL URLWithString:twitterURLString];
+            NSBundle* twitterBundle = [NSBundle bundleWithURL:twitterURL];
+            preferredTwitterID = [twitterBundle bundleIdentifier];
         }
-        
-        NSMutableArray* names = [NSMutableArray arrayWithArray:self.appNameToURL.allKeys];
-        NSUInteger preferredIndex = [names indexOfObject:preferredBrowserName];
-        if(preferredIndex != NSNotFound) {
-            [names exchangeObjectAtIndex:0 withObjectAtIndex:preferredIndex];
-        }
-        
-        [self.browserDropdown removeAllItems];
-        [self.browserDropdown addItemsWithTitles:names];
     }
     
+    NSMutableArray* appNames = [NSMutableArray array];
     {// set twitter dropdown
         self.twitterNameToURL = [NSMutableDictionary dictionary];
         for(NSURL* bundleURL in availTwitterClients) {
@@ -123,15 +102,21 @@
             NSString* appName = [[appBundle infoDictionary] objectForKey:@"CFBundleName"];
             
             [self.twitterNameToURL setObject:bundleURL forKey:appName];
+    
+            // ensures that the current chosen app is shown first
+            if([preferredTwitterID caseInsensitiveCompare:[appBundle bundleIdentifier]] == NSOrderedSame) {
+                [appNames insertObject:appName atIndex:0];
+            } else {
+                [appNames addObject:appName];
+            }
         }
         
         [self.twitterDropdown removeAllItems];
-        [self.twitterDropdown addItemsWithTitles:self.twitterNameToURL.allKeys];
+        [self.twitterDropdown addItemsWithTitles:appNames];
     }
     
     [self.window center];
     [self.window makeKeyAndOrderFront:nil];
-    
     
     {
         // if we've gotten this far, let's go ahead and show a dock icon.
@@ -144,11 +129,7 @@
 
 -(void)openURLString:(NSString*)urlString
 {
-    NSString* browserURLString = [[NSUserDefaults standardUserDefaults] objectForKey:@"preferred_browser"];
-    NSURL* browserURL = [NSURL URLWithString:browserURLString];
-    
-    NSBundle* browserBundle = [NSBundle bundleWithURL:browserURL];
-    NSString* browserID = [browserBundle bundleIdentifier];
+    NSString* browserID = [self preferredBrowser];;
     
     NSURL* url = [NSURL URLWithString:urlString];
     [[NSWorkspace sharedWorkspace] openURLs:[NSArray arrayWithObject:url]
@@ -214,13 +195,6 @@
 
 - (IBAction)okayClicked:(id)sender
 {
-    // map title back to bundle id
-    NSURL* browserURL = [self.appNameToURL objectForKey:self.browserDropdown.selectedItem.title];
-
-    // set the default browser for everything else.
-    [[NSUserDefaults standardUserDefaults] setObject:[browserURL absoluteString] forKey:@"preferred_browser"];
-    
-    
     NSURL* twitterAppURL = [self.twitterNameToURL objectForKey:self.twitterDropdown.selectedItem.title];
 
     // set the default browser for everything else.
@@ -230,7 +204,7 @@
     // Become the default http[s] handler
     NSString *bundleID = [[NSBundle mainBundle] bundleIdentifier];
     // TODO: check result codes
-    //OSStatus httpResult = LSSetDefaultHandlerForURLScheme((CFStringRef)@"http", (__bridge CFStringRef)bundleID);
+
     OSStatus httpsResult = LSSetDefaultHandlerForURLScheme((CFStringRef)@"https", (__bridge CFStringRef)bundleID);
     
     // TODO: terminate here.
