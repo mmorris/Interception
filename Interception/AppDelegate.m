@@ -23,7 +23,15 @@
 {
     CFStringRef preferred = LSCopyDefaultHandlerForURLScheme(CFSTR("http"));
     
-    return (__bridge NSString*)preferred;
+    if([(__bridge NSString*)preferred caseInsensitiveCompare:@"com.mattmorris.Interception"] == NSOrderedSame) {
+        NSString* browserURLString = [[NSUserDefaults standardUserDefaults] objectForKey:@"preferred_browser"];
+        NSURL* browserURL = [NSURL URLWithString:browserURLString];
+        NSBundle* browserBundle = [NSBundle bundleWithURL:browserURL];
+        
+        return [browserBundle bundleIdentifier];
+    } else {
+        return (__bridge NSString*)preferred;
+    }
 }
 
 - (NSURL*)preferredBrowser2
@@ -222,7 +230,7 @@
     // Become the default http[s] handler
     NSString *bundleID = [[NSBundle mainBundle] bundleIdentifier];
     // TODO: check result codes
-    OSStatus httpResult = LSSetDefaultHandlerForURLScheme((CFStringRef)@"http", (__bridge CFStringRef)bundleID);
+    //OSStatus httpResult = LSSetDefaultHandlerForURLScheme((CFStringRef)@"http", (__bridge CFStringRef)bundleID);
     OSStatus httpsResult = LSSetDefaultHandlerForURLScheme((CFStringRef)@"https", (__bridge CFStringRef)bundleID);
     
     // TODO: terminate here.
