@@ -28,6 +28,7 @@
 // Returns array of URLs
 - (NSArray*)listAvailableTwitterClients
 {
+    // To support new clients, just add their app IDs here
     NSArray* twitterClientIDs = @[@"com.tapbots.TweetbotMacAdHoc",
                                   @"com.violasong.Hibari",
                                   @"com.twitter.twitter-mac",
@@ -159,15 +160,6 @@
     [appleEventManager setEventHandler:self
                            andSelector:@selector(handleGetURLEvent:withReplyEvent:)
                          forEventClass:kInternetEventClass andEventID:kAEGetURL];
-    
-    
-//    NSString* browserURLString = [[NSUserDefaults standardUserDefaults] objectForKey:@"preferred_browser"];
-//    NSURL* browserURL = [NSURL URLWithString:browserURLString];
-//    NSLog(@"def browser: %@", browserURL);
-//    
-//    NSString* twitterURLString = [[NSUserDefaults standardUserDefaults] objectForKey:@"preferred_twitter"];
-//    NSURL* twitterURL = [NSURL URLWithString:twitterURLString];
-//    NSLog(@"def twitter: %@", twitterURL);
 }
 
 - (IBAction)okayClicked:(id)sender
@@ -178,13 +170,12 @@
     [[NSUserDefaults standardUserDefaults] setObject:[twitterAppURL absoluteString] forKey:@"preferred_twitter"];
     
     
-    // Become the default http[s] handler
+    // Become the default https handler
     NSString *bundleID = [[NSBundle mainBundle] bundleIdentifier];
     // TODO: check result codes
 
     OSStatus httpsResult = LSSetDefaultHandlerForURLScheme((CFStringRef)@"https", (__bridge CFStringRef)bundleID);
     
-    // TODO: terminate here.
     [[NSApplication sharedApplication] terminate:self];
 }
 
