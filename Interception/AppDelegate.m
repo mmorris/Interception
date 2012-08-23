@@ -136,17 +136,10 @@
 {
     NSString *urlAsString = [[event paramDescriptorForKeyword:keyDirectObject] stringValue];
     
-    if([urlAsString isEqualToString:@"https://twitter.com/mentions"])
-    {
-        //NSURL* twitterURL = [NSURL URLWithString:@"twitter://mentions"];
-        //[[NSWorkspace sharedWorkspace] openURL:twitterURL];
+    if([urlAsString isEqualToString:@"https://twitter.com/mentions"]) {
         [self openTwitterForURL:urlAsString];
-
-    } else if([urlAsString isEqualToString:@"https://twitter.com/messages"]){
-        //NSURL* twitterURL = [NSURL URLWithString:@"twitter://messages"];
-        //[[NSWorkspace sharedWorkspace] openURL:twitterURL];
+    } else if([urlAsString isEqualToString:@"https://twitter.com/messages"]) {
         [self openTwitterForURL:urlAsString];
-        
     } else {
         [self openURLString:urlAsString];
     }
