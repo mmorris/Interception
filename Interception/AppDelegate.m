@@ -25,20 +25,6 @@
     }
 }
 
-- (NSURL*)preferredBrowser2
-{
-    NSURL* url = [NSURL URLWithString:@"http://www.apple.com"];
-    CFURLRef preferredApplication;
-    OSStatus stat = LSGetApplicationForURL((__bridge CFURLRef)url,
-                                           kLSRolesAll,
-                                           NULL,
-                                           &preferredApplication);
-    
-    // TODO: check stat
-
-    return (__bridge NSURL*)preferredApplication;
-}
-
 // Returns array of URLs
 - (NSArray*)listAvailableTwitterClients
 {
