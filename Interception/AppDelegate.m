@@ -8,15 +8,6 @@
 
 #import "AppDelegate.h"
 
-#define SAFARIID @"com.apple.Safari"
-#define CHROMEID @"com.google.Chrome"
-
-#define TWEETBOT_MENTIONS @"tweetbot://mentions"
-#define TWEETBOT_MESSAGES @"tweetbot://messages"
-
-#define TWITTER_MENTIONS @"twitter://mentions"
-#define TWITTER_MESSAGES @"twitter://messages"
-
 @implementation AppDelegate
 
 - (NSString*)preferredBrowser
